@@ -38,10 +38,13 @@ import com.facebook.react.uimanager.UIManagerModule;
 import com.facebook.react.module.annotations.ReactModule;
 import com.viro.core.ARHitTestListener;
 import com.viro.core.ARHitTestResult;
+import com.viro.core.ARScene;
+import com.viro.core.ARAnchor;
 import com.viro.core.Renderer;
 import com.viro.core.Vector;
 import com.viro.core.ViroViewARCore;
 import com.viromedia.bridge.component.VRTARSceneNavigator;
+import com.viromedia.bridge.component.node.VRTARScene;
 import com.viromedia.bridge.utility.ARUtils;
 
 
@@ -141,6 +144,45 @@ public class ARSceneModule extends ReactContextBaseJavaModule {
             }
         });
     }
+
+    @ReactMethod
+    public void hostCloudAnchor(final int viewTag, final String anchorId, final String type, final Promise promise){
+      UIManagerModule uiManager = getReactApplicationContext().getNativeModule(UIManagerModule.class);
+        uiManager.addUIBlock(new UIBlock() {
+          @Override
+          public void execute(NativeViewHierarchyManager nativeViewHierarchyManager) {
+            View sceneView = nativeViewHierarchyManager.resolveView(viewTag);
+              if (sceneView.getParent() == null || !(sceneView.getParent() instanceof VRTARSceneNavigator)) {
+                throw new IllegalViewOperationException("Invalid view returned when " +
+                "calling performARHitTestWithPoint: expected ViroARSceneNavigator as parent");
+              }
+
+              VRTARScene arScene = (VRTARScene) sceneView;
+              float[] empty_float = new float[]{0,0,0};
+              ARAnchor anchor = new ARAnchor(anchorId, null, type, empty_float, empty_float, empty_float);
+              arScene.hostCloudAnchor(anchor, promise);
+            }
+        });
+    }
+
+    @ReactMethod
+    public void resolveCloudAnchor(final int viewTag, final String cloudAnchorId, final Promise promise){
+      UIManagerModule uiManager = getReactApplicationContext().getNativeModule(UIManagerModule.class);
+      uiManager.addUIBlock(new UIBlock() {
+          @Override
+          public void execute(NativeViewHierarchyManager nativeViewHierarchyManager) {
+              View sceneView = nativeViewHierarchyManager.resolveView(viewTag);
+              if (sceneView.getParent() == null || !(sceneView.getParent() instanceof VRTARSceneNavigator)) {
+                throw new IllegalViewOperationException("Invalid view returned when " +
+                          "calling performARHitTestWithPoint: expected ViroARSceneNavigator as parent");
+              }
+
+              VRTARScene arScene = (VRTARScene) sceneView;
+              arScene.resolveCloudAnchor(cloudAnchorId, promise);
+            }
+        });
+    }
+
 
     @ReactMethod
     public void performARHitTestWithPosition(final int viewTag, final ReadableArray position,

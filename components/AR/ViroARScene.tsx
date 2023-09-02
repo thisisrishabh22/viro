@@ -19,6 +19,7 @@ import resolveAssetSource from "react-native/Libraries/Image/resolveAssetSource"
 import {
   ViroAmbientLightInfo,
   ViroAmbientLightUpdateEvent,
+  ViroAnchor,
   ViroARAnchorFoundEvent,
   ViroARAnchorRemovedEvent,
   ViroARAnchorUpdatedEvent,
@@ -202,7 +203,7 @@ export class ViroARScene extends ViroBase<Props> {
     if (
       (event.nativeEvent.state == ViroTrackingStateConstants.TRACKING_LIMITED ||
         event.nativeEvent.state ==
-          ViroTrackingStateConstants.TRACKING_NORMAL) &&
+        ViroTrackingStateConstants.TRACKING_NORMAL) &&
       !this.onTrackingFirstInitialized
     ) {
       this.onTrackingFirstInitialized = true;
@@ -254,6 +255,14 @@ export class ViroARScene extends ViroBase<Props> {
     this.props.onAnchorRemoved &&
       this.props.onAnchorRemoved(event.nativeEvent.anchor);
   };
+
+  _hostCloudAnchor = async (anchor: ViroAnchor) => {
+    return await NativeModules.VRTARSceneModule.hostCloudAnchor(findNodeHandle(this), anchor.anchorId, anchor.type);
+  }
+
+  _resolveCloudAnchor = async (cloudAnchorId: string) => {
+    return await NativeModules.VRTARSceneModule.resolveCloudAnchor(findNodeHandle(this), cloudAnchorId);
+  }
 
   findCollisionsWithRayAsync = async (
     from: Viro3DPoint,
@@ -461,6 +470,8 @@ export class ViroARScene extends ViroBase<Props> {
           onAnchorFoundViro={this._onAnchorFound}
           onAnchorUpdatedViro={this._onAnchorUpdated}
           onAnchorRemovedViro={this._onAnchorRemoved}
+          hostCloudAnchor={this._hostCloudAnchor}
+          resolveCLoudAnchor={this._resolveCloudAnchor}
           timeToFuse={timeToFuse}
           anchorDetectionTypes={anchorDetectionTypes}
           displayPointCloud={displayPointCloud}
@@ -507,6 +518,8 @@ var VRTARScene = requireNativeComponent<any>(
       onAnchorFoundViro: true,
       onAnchorUpdatedViro: true,
       onAnchorRemovedViro: true,
+      hostCloudAnchor: true,
+      resolveCloudAnchor: true,
       onCameraARHitTestViro: true,
       onARPointCloudUpdateViro: true,
       onCameraTransformUpdateViro: true,

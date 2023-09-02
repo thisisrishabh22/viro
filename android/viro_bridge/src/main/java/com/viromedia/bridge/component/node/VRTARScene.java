@@ -24,8 +24,10 @@ package com.viromedia.bridge.component.node;
 import android.graphics.Bitmap;
 import android.os.Handler;
 import android.os.Looper;
+import android.util.Log;
 
 import com.facebook.react.bridge.Arguments;
+import com.facebook.react.bridge.Promise;
 import com.facebook.react.bridge.ReactContext;
 import com.facebook.react.bridge.ReadableArray;
 import com.facebook.react.bridge.ReadableMap;
@@ -193,6 +195,45 @@ public class VRTARScene extends VRTScene implements ARScene.Listener {
                 getId(),
                 ViroEvents.ON_AMBIENT_LIGHT_UPDATE,
                 event);
+    }
+
+
+    public void hostCloudAnchor(ARAnchor anchor, final Promise promise){
+        ((ARScene) mNativeScene).hostCloudAnchor(anchor, new ARScene.CloudAnchorHostListener(){
+
+            @Override
+            public void onSuccess(ARAnchor arAnchor, ARNode arNode) {
+                WritableMap returnMap = Arguments.createMap();
+                returnMap.putMap("anchor", ARUtils.mapFromARAnchor(arAnchor));
+                Log.e("Cloud Anchor", "success hosting");
+                promise.resolve(returnMap);
+            }
+
+            @Override
+            public void onFailure(String s) {
+                Log.e("Cloud Anchor", s);
+                promise.reject(s);
+            }
+        });
+    }
+
+    public void resolveCloudAnchor(String cloudAnchorId, final Promise promise){
+        ((ARScene) mNativeScene).resolveCloudAnchor(cloudAnchorId, new ARScene.CloudAnchorResolveListener(){
+
+            @Override
+            public void onSuccess(ARAnchor arAnchor, ARNode arNode) {
+                WritableMap returnMap = Arguments.createMap();
+                returnMap.putMap("anchor", ARUtils.mapFromARAnchor(arAnchor));
+                Log.e("Resolve Cloud Anchor", "resolve success");
+                promise.resolve(returnMap);
+            }
+
+            @Override
+            public void onFailure(String s) {
+                Log.e("Resolve Cloud Anchor", s);
+                promise.reject(s);
+            }
+        });
     }
 
     @Override

@@ -17,6 +17,8 @@ declare type Props = ViroCommonProps & {
     onTrackingUpdated?: (state: ViroTrackingState, reason: ViroTrackingReason) => void;
     onPlatformUpdate?: (platformInfoViro: ViroPlatformInfo) => void;
     onAmbientLightUpdate?: (update: ViroAmbientLightInfo) => void;
+    hostCloudAnchor?: (anchor: ViroAnchor) => Promise<any>;
+    resolveCloudAnchor?: (cloudAnchorId: string) => Promise<any>;
     /**
      * Describes the acoustic properties of the room around the user
      */

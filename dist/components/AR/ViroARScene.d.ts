@@ -1,6 +1,6 @@
 /// <reference types="react" />
 import { NativeSyntheticEvent } from "react-native";
-import { ViroAmbientLightInfo, ViroAmbientLightUpdateEvent, ViroARAnchorFoundEvent, ViroARAnchorRemovedEvent, ViroARAnchorUpdatedEvent, ViroARPointCloud, ViroARPointCloudUpdateEvent, ViroCameraARHitTest, ViroCameraARHitTestEvent, ViroCameraTransform, ViroCameraTransformEvent, ViroPlatformInfo, ViroPlatformUpdateEvent, ViroTrackingReason, ViroTrackingState, ViroTrackingUpdatedEvent } from "../Types/ViroEvents";
+import { ViroAmbientLightInfo, ViroAmbientLightUpdateEvent, ViroAnchor, ViroARAnchorFoundEvent, ViroARAnchorRemovedEvent, ViroARAnchorUpdatedEvent, ViroARPointCloud, ViroARPointCloudUpdateEvent, ViroCameraARHitTest, ViroCameraARHitTestEvent, ViroCameraTransform, ViroCameraTransformEvent, ViroPlatformInfo, ViroPlatformUpdateEvent, ViroTrackingReason, ViroTrackingState, ViroTrackingUpdatedEvent } from "../Types/ViroEvents";
 import { Viro3DPoint, ViroPhysicsWorld, ViroRay, ViroScale, ViroSoundRoom, ViroSource } from "../Types/ViroUtils";
 import { ViroBase } from "../ViroBase";
 import { ViroCommonProps } from "./ViroCommonProps";
@@ -50,6 +50,8 @@ export declare class ViroARScene extends ViroBase<Props> {
     _onAnchorFound: (event: NativeSyntheticEvent<ViroARAnchorFoundEvent>) => void;
     _onAnchorUpdated: (event: NativeSyntheticEvent<ViroARAnchorUpdatedEvent>) => void;
     _onAnchorRemoved: (event: NativeSyntheticEvent<ViroARAnchorRemovedEvent>) => void;
+    _hostCloudAnchor: (anchor: ViroAnchor) => Promise<any>;
+    _resolveCloudAnchor: (cloudAnchorId: string) => Promise<any>;
     findCollisionsWithRayAsync: (from: Viro3DPoint, to: Viro3DPoint, closest: any, viroTag: string) => Promise<any>;
     findCollisionsWithShapeAsync: (from: Viro3DPoint, to: Viro3DPoint, shapeString: string, shapeParam: any, viroTag: string) => Promise<any>;
     performARHitTestWithRay: (ray: ViroRay) => Promise<any>;
